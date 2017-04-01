@@ -6,9 +6,9 @@ from rancher_metrics_collector import settings
 
 class RancherHostClient():
 
-    def __init__(self):
-        self.api_keys = settings.API_KEYS
-        self.rancher_host = settings.RANCHER_HOST
+    def __init__(self, api_keys, target_host):
+        self.api_keys = api_keys
+        self.rancher_host = target_host
         self.target_host = \
             'http://' + self.api_keys['access_key'] + \
             ':' + self.api_keys['secret_key'] + '@' + self.rancher_host
