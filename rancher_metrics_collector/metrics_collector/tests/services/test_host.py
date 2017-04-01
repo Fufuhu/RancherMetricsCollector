@@ -11,4 +11,17 @@ class TestRancherHostClient(unittest.TestCase):
         target_host = settings.RANCHER_HOST
 
         client = RancherHostClient(api_keys, target_host)
-        client.get_project_list()
+        environments = client.get_project_list()
+
+        self.assertIsNotNone(environments)
+        self.assertEqual(len(environments), 2)
+
+
+    def test_get_host_list(self):
+        api_keys = settings.API_KEYS
+        target_host = settings.RANCHER_HOST
+
+        client = RancherHostClient(api_keys, target_host)
+
+        environment = '1a5'
+        client.get_host_lists(environment)
