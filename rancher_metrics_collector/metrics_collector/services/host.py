@@ -17,17 +17,22 @@ class RancherHostClient():
         self.logger = getLogger(__name__)
         self.logger.addHandler(handler)
 
+
+  
+
+
     def get_project_list(self):
         """
         Get the list of environments.
         """
         self.logger.setLevel(DEBUG)
-        PATH = '/v2-beta/projects/'
-        TARGET_PATH = self.target_host + PATH
-        self.logger.info('TARGET_PATH:' + TARGET_PATH)
-        r = requests.get(TARGET_PATH)
-        response_body = r.json()
-        # self.logger.info("RESPONSE_BODY:" + str(response_body))
+        request_path = '/v2-beta/projects/'
+        target_path = self.target_host + request_path
+        self.logger.info('TARGET_FULL_PATH:' + target_path)
+
+        response = requests.get(target_path)
+        response_body = response.json()
+
         data = response_body.get('data')
         self.logger.info("DATA_LENGTH:" + str(len(data)))
 
@@ -49,28 +54,26 @@ class RancherHostClient():
         """
         Get the list of hosts.
         """
-        PATH = '/v2-beta/projects/' + environment + '/hosts/'
+        request_path = '/v2-beta/projects/' + environment + '/hosts/'
 
         self.logger.setLevel(DEBUG)
 
-        TARGET_PATH = self.target_host + PATH
-        self.logger.info('TARGET_PATH:' + TARGET_PATH)
-        r = requests.get(TARGET_PATH)
-        response_body = r.json()
-        # self.logger.info("RESPONSE_BODY:" + str(response_body))
+        target_path = self.target_host + request_path
+        self.logger.info('TARGET_PATH:' + target_path)
+        response = requests.get(target_path)
+        response_body = response.json()
+
         data = response_body.get('data')
         self.logger.info("DATA_LENGTH:" + str(len(data)))
 
         hosts = []
         for elem in data:
-            id = elem.get('id')
-            hostname = elem.get('hostname')
-            self.logger.info('id:' + id)
-            self.logger.info('hostname:' + hostname)
             host = {
-                'id': id,
-                'hostname': hostname,
+                "id": elem.get('id'),
+                "hostname": elem.get('hostname'),
             }
+            self.logger.info('id:' + host.get('id', 'NoID'))
+            self.logger.info('hostname:' + host.get('hostname', 'NoHostName'))
             hosts = hosts + [host]
-        
+
         return hosts
